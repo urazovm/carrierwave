@@ -162,9 +162,13 @@ module CarrierWave
       elsif is_path?
         File.open(@file, "rb") {|file| file.read}
       else
-        @file.try(:rewind)
+        # @file.try(:rewind)
+        # @content = @file.read
+        # @file.try(:close) unless @file.try(:closed?)
+        # @content
+        @file.rewind if @file.respond_to?(:rewind)
         @content = @file.read
-        @file.try(:close) unless @file.try(:closed?)
+        @file.close if @file.respond_to?(:close) && @file.respond_to?(:closed?) && !@file.closed?
         @content
       end
     end
